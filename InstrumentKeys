@@ -1,0 +1,53 @@
+Digital Instrument Keybindings
+
+# "# Transposed to fit into 3-octave range:",
+# "# Left hand: 48–66, Right hand: 72–83",
+# reduce to 82 for testing
+
+
+
+High Octave:
+do		= q
+do sharp	= shift+q
+re		= w
+mi flat		= ctrl+e
+mi		= e
+fa		= r
+fa sharp	= shift+r
+so		= t
+so sharp	= shift+t
+la		= y
+ti flat		= ctrl+u
+ti		= u
+
+
+
+Medium Octave:
+do		= a
+do sharp	= shift+a
+re		= s
+mi flat		= ctrl+d
+mi		= d
+fa		= f
+fa sharp	= shift+f
+so		= g
+so sharp	= shift+g
+la		= h
+ti flat		= ctrl+j
+ti		= j
+
+
+
+Low Octave:
+do		= z
+do sharp	= shift+z
+re		= x
+mi flat		= ctrl+c
+mi		= c
+fa		= v
+fa sharp	= shift+v
+so		= b
+so sharp	= shift+b
+la		= n
+ti flat		= ctrl+m
+ti		= m
