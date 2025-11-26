@@ -1,7 +1,5 @@
 Aiye's Instrument Player
 
-![Screenshot](https://github.com/topazamaranth/Aiyes-WWM-Instrument-Player/blob/main/Screenshot%202025-11-23%20184911.png)
-
 A MIDI-to-macro converter and automated playback tool for Where Winds Meet's instruments.
 This is the first public release of Aiye's Instrument Player, a standalone Windows utility for converting MIDI files into playable in-game keystroke macros for Where Winds Meet.
 
