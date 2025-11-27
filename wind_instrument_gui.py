@@ -1,33 +1,25 @@
-
-import os
-import sys
+import ctypes
 import json
+import os
+import platform
+import sys
+import tempfile
 import threading
 import time
-import tempfile
 import traceback
 
-from PyQt5 import QtGui
-
-import platform  # <-- add this
-import ctypes    # <-- and this
-
+import keyboard  # global key sender
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 # --- Your existing tools ---
 from midi_tools.io_midicsv import midi_to_csv
-from midi_tools.pipeline import process_file
 from midi_tools.macro import csv_to_keystroke_macro
-
-import keyboard  # global key sender
+from midi_tools.pipeline import process_file
 
 
 # ==========================
 #  CONFIG
 # ==========================
-
-import os
-import sys
 
 def resource_path(relative_name: str) -> str:
     """
@@ -47,11 +39,13 @@ def resource_path(relative_name: str) -> str:
     return os.path.join(base_dir, relative_name)
 
 MIDICSV_EXE = resource_path("midicsv.exe")
+STOP_HOTKEY = "Scroll Lock"
+SLEEP_TIME = 2
 
-# MIDICSV_EXE = r"C:\Users\miria\OneDrive\Desktop\MIDI\midicsv.exe"
 WINDOW_MIN_PITCH = 48
 WINDOW_MAX_PITCH = 83
 PLAYLIST_GAP_SECONDS = 5.0
+
 
 # ==========================
 #  Nord Color Theme
@@ -76,15 +70,14 @@ def enable_windows_dark_titlebar(window: QtWidgets.QWidget):
     """
     Try to enable the dark title bar on Windows 10/11 for this window.
 
-    This uses the DwmSetWindowAttribute API. If it fails or we're not on Windows,
-    it quietly does nothing.
+    This uses the DwmSetWindowAttribute API. If it fails, or we're not on Windows, it quietly does nothing.
     """
     if platform.system() != "Windows":
         return
 
     try:
         hwnd = int(window.winId())
-    except Exception:
+    except (Exception,):
         return
 
     DWMWA_USE_IMMERSIVE_DARK_MODE = 20  # value for newer Windows 10/11
@@ -377,7 +370,7 @@ class MainWindow(QtWidgets.QWidget):
         self.play_playlist_button.setEnabled(False)
         self.play_playlist_button.clicked.connect(self.on_play_playlist_clicked)
 
-        self.stop_button = QtWidgets.QPushButton("Stop (F11)")
+        self.stop_button = QtWidgets.QPushButton("Stop")
         self.stop_button.setEnabled(False)
         self.stop_button.clicked.connect(self.on_stop_clicked)
 
@@ -396,7 +389,7 @@ class MainWindow(QtWidgets.QWidget):
         layout.addLayout(button_row)
 
         # === GLOBAL PANIC HOTKEY ===
-        keyboard.add_hotkey("f11", self._on_global_hotkey)
+        keyboard.add_hotkey(STOP_HOTKEY, self._on_global_hotkey)
 
     # ==========================
     #  Instructions Popup
@@ -409,8 +402,9 @@ class MainWindow(QtWidgets.QWidget):
             (
                 "Play: plays just the currently loaded song.\n"
                 "Play Playlist: plays all from the selected song through to the end.\n"
-                "Stop / F11: interrupts the current song and cancels the rest of the playlist.\n"
-                "After hitting play, immediately switch to your WWM client, as the keystrokes have begun playing. F11 stops keystroke play even within WWM.\n"
+                f"Stop / {STOP_HOTKEY}: interrupts the current song and cancels the rest of the playlist.\n"
+                f"After hitting play, you have {SLEEP_TIME} seconds to switch to your WWM client before keystrokes begin playing.\n"
+                f"{STOP_HOTKEY} stops keystroke play even within WWM.\n"
                 "THIS PROGRAM MUST BE RUN IN ADMINISTRATOR MODE FOR KEYSTROKES TO FUNCTION IN WWM."
             ),
         )
@@ -688,8 +682,9 @@ class MainWindow(QtWidgets.QWidget):
         if self.play_thread and self.play_thread.is_alive():
             return
 
+        time.sleep(SLEEP_TIME)
         self.playlist_mode = False
-        self.status_label.setText("Playing…")
+        self.status_label.setText(f"Playing… ({STOP_HOTKEY} to stop)")
         self.stop_event.clear()
         self.stop_button.setEnabled(True)
         self.play_button.setEnabled(False)
@@ -714,12 +709,13 @@ class MainWindow(QtWidgets.QWidget):
         if self.play_thread and self.play_thread.is_alive():
             return
 
+        time.sleep(SLEEP_TIME)
         self.playlist_mode = True
         start_row = self.playlist.currentRow()
         if start_row < 0:
             start_row = 0
 
-        self.status_label.setText("Playing playlist…")
+        self.status_label.setText(f"Playing playlist… ({STOP_HOTKEY} to stop)")
         self.stop_event.clear()
         self.stop_button.setEnabled(True)
         self.play_button.setEnabled(False)
@@ -752,7 +748,7 @@ class MainWindow(QtWidgets.QWidget):
                 try:
                     macro = build_macro_from_midi(path)
                     self.macro_cache[path] = macro
-                except Exception:
+                except (Exception,):
                     continue
 
             self.current_midi_path = path
@@ -789,7 +785,7 @@ class MainWindow(QtWidgets.QWidget):
             self.playlist.blockSignals(False)
 
         self.file_label.setText(f"Playing: {path}")
-        self.status_label.setText("Playing playlist…")
+        self.status_label.setText(f"Playing playlist… ({STOP_HOTKEY} to stop)")
 
     # ==========================
     #  Playback Finished
@@ -844,7 +840,7 @@ class MainWindow(QtWidgets.QWidget):
     def _global_stop(self):
         if self.play_thread and self.play_thread.is_alive():
             self.stop_playback()
-            self.status_label.setText("Stopped via F11.")
+            self.status_label.setText(f"Stopped via {STOP_HOTKEY}.")
 
     # ==========================
     #  Close Event
