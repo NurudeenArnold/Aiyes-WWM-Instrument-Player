@@ -39,7 +39,7 @@ def resource_path(relative_name: str) -> str:
     return os.path.join(base_dir, relative_name)
 
 MIDICSV_EXE = resource_path("midicsv.exe")
-STOP_HOTKEY = "Scroll Lock"
+STOP_HOTKEY = "Pause"
 SLEEP_TIME = 2
 
 WINDOW_MIN_PITCH = 48
