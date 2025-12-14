@@ -38,7 +38,6 @@ def resource_path(relative_name: str) -> str:
 
     return os.path.join(base_dir, relative_name)
 
-MIDICSV_EXE = resource_path("midicsv.exe")
 STOP_HOTKEY = "Pause"
 SLEEP_TIME = 2
 
@@ -228,7 +227,7 @@ def build_macro_from_midi(midi_path: str):
     raw_csv = os.path.join(tmp_dir, base + "_raw.csv")
     transposed_csv = os.path.join(tmp_dir, base + "_transposed.csv")
 
-    midi_to_csv(MIDICSV_EXE, midi_path, raw_csv)
+    midi_to_csv(midi_path, raw_csv)
 
     process_file(
         raw_csv,
@@ -956,4 +955,4 @@ if __name__ == "__main__":
 # Then run this EXACT command in pycharm terminal
 #
 
-# python -m PyInstaller --onefile --noconsole --icon "music-therapy.ico" --add-binary "midicsv.exe;." --add-data "music-therapy.ico;." --hidden-import PyQt5 --hidden-import PyQt5.QtCore --hidden-import PyQt5.QtGui --hidden-import PyQt5.QtWidgets --collect-all PyQt5 wind_instrument_gui.py
+# python -m PyInstaller --onefile --noconsole --icon "music-therapy.ico" --add-data "music-therapy.ico;." --hidden-import PyQt5 --hidden-import PyQt5.QtCore --hidden-import PyQt5.QtGui --hidden-import PyQt5.QtWidgets --collect-all PyQt5 wind_instrument_gui.py

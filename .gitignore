@@ -1,6 +1,5 @@
 *.bat
 *.spec
-midicsv.exe
 build/
 dist/
 .idea/
