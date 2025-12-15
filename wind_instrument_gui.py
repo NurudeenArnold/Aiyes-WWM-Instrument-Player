@@ -22,13 +22,6 @@ from midi_tools.pipeline import process_file
 # ==========================
 
 def resource_path(relative_name: str) -> str:
-    """
-    Get absolute path to a bundled resource (works in dev & PyInstaller).
-
-    - In dev: returns path relative to this file.
-    - In frozen (one-file or one-folder): returns path
-      inside the PyInstaller bundle.
-    """
     if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
         base_dir = sys._MEIPASS  # type: ignore[attr-defined]
     elif getattr(sys, "frozen", False):
@@ -66,11 +59,6 @@ NORD_ERROR = "#BF616A"
 NORD_WARNING = "#EBCB8B"
 
 def enable_windows_dark_titlebar(window: QtWidgets.QWidget):
-    """
-    Try to enable the dark title bar on Windows 10/11 for this window.
-
-    This uses the DwmSetWindowAttribute API. If it fails, or we're not on Windows, it quietly does nothing.
-    """
     if platform.system() != "Windows":
         return
 
@@ -310,27 +298,6 @@ class MainWindow(QtWidgets.QWidget):
         act_instructions.triggered.connect(self.show_instructions)
         help_menu.addAction(act_instructions)
 
-        # === PLAYLIST ===
-        # playlist_label = QtWidgets.QLabel("Playlist")
-        # playlist_label.setStyleSheet("font-weight: bold;")
-        #
-        # self.playlist = QtWidgets.QListWidget()
-
-        # playlist_label = QtWidgets.QLabel("Playlist")
-        # playlist_label.setObjectName("sectionLabel")
-        #
-        # self.playlist.itemSelectionChanged.connect(self.on_playlist_selection_changed)
-        # self.playlist.itemDoubleClicked.connect(self.on_playlist_item_double_clicked)
-        #
-        # # Allow click+drag reordering
-        # self.playlist.setDragDropMode(QtWidgets.QAbstractItemView.InternalMove)
-        # self.playlist.setDefaultDropAction(QtCore.Qt.MoveAction)
-        #
-        # # Right-click context menu
-        # self.playlist.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        # self.playlist.customContextMenuRequested.connect(
-        #     self.show_playlist_context_menu
-        # )
         # === PLAYLIST ===
         playlist_label = QtWidgets.QLabel("Playlist")
         playlist_label.setObjectName("sectionLabel")
@@ -769,12 +736,6 @@ class MainWindow(QtWidgets.QWidget):
                 if self.stop_event.wait(PLAYLIST_GAP_SECONDS):
                     return
 
-    # @QtCore.pyqtSlot(int, str)
-    # def _set_now_playing(self, row: int, path: str):
-    #     if 0 <= row < self.playlist.count():
-    #         self.playlist.setCurrentRow(row)
-    #     self.file_label.setText(f"Playing: {path}")
-    #     self.status_label.setText("Playing playlist…")
     @QtCore.pyqtSlot(int, str)
     def _set_now_playing(self, row: int, path: str):
         if 0 <= row < self.playlist.count():
@@ -849,80 +810,6 @@ class MainWindow(QtWidgets.QWidget):
         self.stop_playback()
         event.accept()
 
-
-# ==========================
-#  Main
-# ==========================
-
-# def main():
-#     app = QtWidgets.QApplication(sys.argv)
-#     w = MainWindow()
-#     w.show()
-#     sys.exit(app.exec_())
-
-# def main():
-#     app = QtWidgets.QApplication(sys.argv)
-#
-#     # Apply dark Nord theme before creating any windows
-#     apply_nord_theme(app)
-#
-#     w = MainWindow()
-#     w.show()
-#     sys.exit(app.exec_())
-# def main():
-#     app = QtWidgets.QApplication(sys.argv)
-#
-#     # Apply dark Nord theme before creating any windows
-#     apply_nord_theme(app)
-#
-#     w = MainWindow()
-#
-#     # Try to make the native title bar dark on Windows
-#     enable_windows_dark_titlebar(w)
-#
-#     w.show()
-#     sys.exit(app.exec_())
-
-# def main():
-#     app = QtWidgets.QApplication(sys.argv)
-#
-#     # Apply dark Nord theme before creating any windows
-#     apply_nord_theme(app)
-#
-#     # Set app/window icon
-#     app.setWindowIcon(QtGui.QIcon(resource_path("music-therapy.ico")))
-#
-#     w = MainWindow()
-#
-#     # Try to make the native title bar dark on Windows
-#     enable_windows_dark_titlebar(w)
-#
-#     w.show()
-#     sys.exit(app.exec_())
-#
-# if __name__ == "__main__":
-#     main()
-
-# def main():
-#     app = QtWidgets.QApplication(sys.argv)
-#
-#     # Apply dark Nord theme before creating any windows
-#     apply_nord_theme(app)
-#
-#     # Set app/window icon (using your resource_path helper)
-#     icon_path = resource_path("music-therapy.ico")
-#     app.setWindowIcon(QtGui.QIcon(icon_path))
-#
-#     w = MainWindow()
-#
-#     # Try to make the native title bar dark on Windows
-#     enable_windows_dark_titlebar(w)
-#
-#     # (Optional but nice) also set the window-specific icon:
-#     w.setWindowIcon(QtGui.QIcon(icon_path))
-#
-#     w.show()
-#     sys.exit(app.exec_())
 def main():
     app = QtWidgets.QApplication(sys.argv)
 
@@ -946,13 +833,3 @@ def main():
 
 if __name__ == "__main__":
      main()
-## python "C:\Users\miria\PycharmProjects\MIDIMacroEfforts\wind_instrument_gui.py"
-
-## TO PACKAGE
-# cd path\to\your\project
-# cd C:\Users\miria\PycharmProjects\MIDIMacroEfforts\
-#
-# Then run this EXACT command in pycharm terminal
-#
-
-# python -m PyInstaller --onefile --noconsole --icon "music-therapy.ico" --add-data "music-therapy.ico;." --hidden-import PyQt5 --hidden-import PyQt5.QtCore --hidden-import PyQt5.QtGui --hidden-import PyQt5.QtWidgets --collect-all PyQt5 wind_instrument_gui.py
