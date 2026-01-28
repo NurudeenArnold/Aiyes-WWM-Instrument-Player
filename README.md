@@ -1,8 +1,16 @@
 Check [upstream](https://github.com/topazamaranth/Aiyes-WWM-Instrument-Player) for general information.
 
-### Changes
-- Playback occurs 0.5 seconds after hitting play.
-- The play/pause playback key is changed to F11
+**[Click here to Download](https://github.com/NurudeenArnold/Aiyes-WWM-Instrument-Player/releases/download/v20260128/WWM.Player.exe)**
+
+### What changed
+
+- **F11** now toggles Pause/Play for quick control
+- Added **playback duration bar** to track song progress
+- Songs can now be **saved to `playlist.json`** via the "Save" button and is now automatically **loaded on startup**
+- Updated **UI theme** for a cleaner look
+- Refreshed **icons** at playback bar
+- Minor **label cleanup** for a simpler layout
+- **Songs now display Name, Duration, and BPM** with **click-to-sort functionality** on each column
 
 ### How to compile
 - For beginner: Fork this repo, push any change, and GitHub Actions will automatically put the .exe in `Releases` (takes ~2 minutes).
