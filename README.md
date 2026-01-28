@@ -13,7 +13,3 @@ Check [upstream](https://github.com/topazamaranth/Aiyes-WWM-Instrument-Player) f
 - **Songs now display Name, Duration, and BPM** with **click-to-sort functionality** on each column
 
 > ⚠️ **Note:** I made this primarily for myself, so it might not work correctly on other PCs. I am a beginner, some of the code might be a bit messy, not all new features have been fully tested, and AI tools were used for assistance.
-
-### How to compile
-- For beginner: Fork this repo, push any change, and GitHub Actions will automatically put the .exe in `Releases` (takes ~2 minutes).
-- For veteran: You should know how to compile already.
